@@ -1,11 +1,10 @@
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import { cn } from "@/lib/utils";
-import { forwardRef, useEffect, useState } from "react";
-import colors from "tailwindcss/colors";
-import AnimatedNumber from "./animated-number";
-import { useSenseBoxValuesStore } from "@/lib/store/useSenseBoxValuesStore";
 import { useMeasurementStore } from "@/lib/store/useMeasurementStore";
+import { useSenseBoxValuesStore } from "@/lib/store/useSenseBoxValuesStore";
+import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+import AnimatedNumber from "./animated-number";
 
 const MeasurementsGrid = ({ useHistoric }: { useHistoric: boolean }) => {
   const { temperature, ph, ec, turbidity } = useSenseBoxValuesStore();
@@ -14,7 +13,7 @@ const MeasurementsGrid = ({ useHistoric }: { useHistoric: boolean }) => {
   const selectedBox = useAuthStore((state) => state.selectedBox);
 
   return (
-    <div className="flex w-full flex-col justify-around p-1 pb-safe-offset-8">
+    <div className="flex w-full flex-col justify-around p-1">
       <div className={cn("relative flex w-full flex-col divide-y")}>
         <div className={cn("grid w-full grid-cols-2 gap-1")}>
           {useHistoric ? (
