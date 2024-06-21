@@ -17,7 +17,7 @@ export default function BluetoothSlide({
   const { connect, isConnected, disconnect } = useSenseBox();
 
   return (
-    <WizardSlide className="flex h-full flex-col  justify-center gap-4">
+    <div className="flex h-screen flex-col  justify-center gap-4">
       <div className="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
         <div className="space-y-4">
           <h1 className="text-3xl font-bold text-center">
@@ -28,10 +28,17 @@ export default function BluetoothSlide({
           </p>
         </div>
         <div className="flex justify-center m-6">
-          <Button onClick={() => connect()}>
-            <BluetoothIcon />
-            Scannen
-          </Button>
+          {!isConnected ? (
+            <Button onClick={() => connect()}>
+              <BluetoothIcon />
+              Scannen
+            </Button>
+          ) : (
+            <Button onClick={() => disconnect()}>
+              <BluetoothIcon />
+              Trennen
+            </Button>
+          )}
         </div>
 
         <div className="flex justify-end mt-6">
@@ -41,6 +48,6 @@ export default function BluetoothSlide({
           <Button onClick={() => swiper.slideNext()}>Weiter</Button>
         </div>
       </div>
-    </WizardSlide>
+    </div>
   );
 }

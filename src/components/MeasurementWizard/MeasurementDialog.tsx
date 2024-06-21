@@ -13,6 +13,7 @@ import { Progress } from "@/components/ui/progress";
 import { DiscIcon } from "lucide-react";
 import AnimatedNumber from "@/components/ui/animated-number";
 import { useSenseBoxValuesStore } from "@/lib/store/useSenseBoxValuesStore";
+import { toast } from "../ui/use-toast";
 
 export default function MeasurementDialog({
   name,
@@ -43,9 +44,9 @@ export default function MeasurementDialog({
         switch (name) {
           case "Wassertemperatur":
             temperatureSum += temperature;
-
+            toast({ title: "Wassertemperatur: " + temperature });
             break;
-          case "pH-Wert":
+          case "ph-Wert":
             phSum += ph;
             break;
           case "Elektrische Leitfähigkeit":
@@ -63,16 +64,16 @@ export default function MeasurementDialog({
       setIsRecording(false);
       switch (name) {
         case "Wassertemperatur":
-          updateFormData("temperature", temperatureSum / counter);
-          setValue(temperatureSum / counter);
+          updateFormData("temperature", temperature);
+          setValue(temperature);
           break;
-        case "pH-Wert":
-          updateFormData("ph", phSum / counter);
-          setValue(phSum / counter);
+        case "ph-Wert":
+          updateFormData("ph", ph);
+          setValue(ph);
           break;
         case "Elektrische Leitfähigkeit":
-          updateFormData("conductivity", ecSum / counter);
-          setValue(ecSum / counter);
+          updateFormData("conductivity", ec);
+          setValue(ec);
           break;
       }
 

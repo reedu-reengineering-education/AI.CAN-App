@@ -11,14 +11,14 @@ export default function LoginOrRegister({
     <Tabs className="w-full" defaultValue="login">
       <TabsList className="flex justify-evenly w-full ">
         <TabsTrigger value="login">Login</TabsTrigger>
-        <TabsTrigger value="register">Registrieren</TabsTrigger>
+        {/* <TabsTrigger value="register">Registrieren</TabsTrigger> */}
       </TabsList>
       <TabsContent value="login">
         <OpenSenseMapLogin setAlreadyLoggedIn={setAlreadyLoggedIn} />
       </TabsContent>
-      <TabsContent value="register">
+      {/* <TabsContent value="register">
         <OpenSenseMapRegister />
-      </TabsContent>
+      </TabsContent> */}
     </Tabs>
   );
 }
