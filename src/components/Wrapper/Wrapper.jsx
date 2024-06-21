@@ -21,7 +21,9 @@ import MeasurementTab from "../Measurement/MeasurementTab";
 import { useMeasurementStore } from "@/lib/store/useMeasurementStore";
 
 export default function Wrapper() {
-  const { name } = useMeasurementStore();
+  const { name, geruch, wind, wetter, farbe, development } =
+    useMeasurementStore();
+
   return (
     <div className="flex flex-col h-screen">
       <div className="basis-1/4">
@@ -49,11 +51,11 @@ export default function Wrapper() {
                   <DialogHeader>Gewässergütekartierung</DialogHeader>
                   <DialogDescription>
                     <OverviewWaterwayForm
-                      windStrength={1}
-                      weather={2}
-                      developmentLevel={5}
-                      smellIntensity={4}
-                      coloration={3}
+                      windStrength={wind}
+                      weather={wetter}
+                      developmentLevel={development}
+                      smellIntensity={geruch}
+                      coloration={farbe}
                     />
                   </DialogDescription>
                 </DialogContent>

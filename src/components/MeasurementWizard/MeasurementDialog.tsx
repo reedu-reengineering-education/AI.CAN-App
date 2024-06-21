@@ -44,7 +44,6 @@ export default function MeasurementDialog({
         switch (name) {
           case "Wassertemperatur":
             temperatureSum += temperature;
-            toast({ title: "Wassertemperatur: " + temperature });
             break;
           case "ph-Wert":
             phSum += ph;
