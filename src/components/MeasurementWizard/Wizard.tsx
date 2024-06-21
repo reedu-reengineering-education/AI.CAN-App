@@ -24,7 +24,7 @@ export default function Wizard() {
   // State to hold all the data collected from the slides
   const [formData, setFormData] = useState({
     box: null,
-    sensors: {}, 
+    sensors: {},
     position: null,
     ph: 0,
     temperature: 0,
@@ -75,7 +75,7 @@ export default function Wizard() {
           />
         </WizardSlide>
       </SwiperSlide>
-      {isConnected ? (
+      {!isConnected ? (
         <SwiperSlide>
           <WizardSlide>
             <BluetoothSlide updateFormData={updateFormData} />
@@ -85,7 +85,10 @@ export default function Wizard() {
 
       <SwiperSlide>
         <WizardSlide>
-          <MeasurementSlide formData={formData} updateFormData={updateFormData} />
+          <MeasurementSlide
+            formData={formData}
+            updateFormData={updateFormData}
+          />
         </WizardSlide>
       </SwiperSlide>
       <SwiperSlide>
