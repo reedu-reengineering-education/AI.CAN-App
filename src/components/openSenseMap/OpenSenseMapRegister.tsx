@@ -18,6 +18,13 @@ import { useToast } from "../ui/use-toast";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Loader2Icon } from "lucide-react";
 import { register } from "@/lib/api/openSenseMapClient";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 const formSchema = z
   .object({
@@ -49,6 +56,11 @@ export default function OpenSenseMapRegister() {
     setLoading(true);
     try {
       await register(values.name, values.email, values.password);
+      toast({
+        title:
+          "Registrierung erfolgreich, Bestätige die EMail und melde dich an!",
+        duration: 5000,
+      });
       swiper.slideNext();
     } catch (e) {
       toast({ variant: "destructive", title: "Registrierung fehlgeschlagen" });
@@ -59,68 +71,98 @@ export default function OpenSenseMapRegister() {
 
   return (
     <div className="flex h-full w-full flex-col content-center justify-center gap-4">
-      <p className="mb-4 font-medium">Neuer openSenseMap Account</p>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="Name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-Mail</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="E-Mail" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Passwort</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Passwort" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="passwordConfirm"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Passwort wiederholen</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Passwort" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button disabled={loading} className="float-right" type="submit">
-            {loading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
-            Registrieren
-          </Button>
-        </form>
-      </Form>
+      <Card>
+        <CardHeader>
+          <CardTitle>Bei der openSenseMap registrieren</CardTitle>
+          <CardDescription>
+            Du erhältst im Anschluss eine Email, mit der du deine Registrierung
+            bestätigen musst!
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleLogin)}
+              className="space-y-2"
+            >
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">Name</FormLabel>
+                    <FormControl>
+                      <Input type="text" placeholder="Name" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">E-Mail</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="E-Mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">Passwort</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Passwort"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="passwordConfirm"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">
+                      Passwort wiederholen
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Passwort"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex flex-col">
+                <Button
+                  disabled={loading}
+                  className="float-right"
+                  type="submit"
+                >
+                  {loading && (
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Registrieren
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

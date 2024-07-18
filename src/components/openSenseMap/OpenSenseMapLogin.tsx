@@ -17,6 +17,14 @@ import {
 import { useToast } from "../ui/use-toast";
 import { useAuthStore } from "@/lib/store/useAuthStore";
 import { Loader2Icon } from "lucide-react";
+import Link from "next/link";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../ui/card";
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -24,9 +32,9 @@ const formSchema = z.object({
 });
 
 export default function OpenSenseMapLogin({
-  setAlreadyLoggedIn,
+  disabled,
 }: {
-  setAlreadyLoggedIn?: (value: boolean) => void;
+  disabled?: boolean;
 }) {
   const [loading, setLoading] = useState(false);
   const { login } = useOpenSenseMapAuth();
@@ -38,6 +46,7 @@ export default function OpenSenseMapLogin({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email,
+      password: "",
     },
   });
 
@@ -45,8 +54,7 @@ export default function OpenSenseMapLogin({
     setLoading(true);
     try {
       await login(values.email, values.password);
-      if (setAlreadyLoggedIn) setAlreadyLoggedIn(true);
-      console.log("Login successful");
+      toast({ title: "Login erfolgreich", duration: 1000 });
     } catch (e) {
       console.log(e);
       toast({ variant: "destructive", title: "Login fehlgeschlagen" });
@@ -57,41 +65,61 @@ export default function OpenSenseMapLogin({
 
   return (
     <div className="flex h-full flex-col content-center justify-center gap-4">
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleLogin)} className="space-y-2">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>E-Mail</FormLabel>
-                <FormControl>
-                  <Input type="email" placeholder="E-Mail" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="password"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Passwort</FormLabel>
-                <FormControl>
-                  <Input type="password" placeholder="Passwort" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <Button disabled={loading} className="float-right" type="submit">
-            {loading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
-            Anmelden
-          </Button>
-        </form>
-      </Form>
+      <Card className="w-full max-w-md">
+        <CardHeader>
+          <CardTitle>Anmelden</CardTitle>
+          <CardDescription>
+            Melde dich mit deinem openSenseMap Account an.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleLogin)}
+              className="space-y-2"
+            >
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">E-Mail</FormLabel>
+                    <FormControl>
+                      <Input type="email" placeholder="E-Mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="font-bold">Passwort</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="password"
+                        placeholder="Passwort"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <div className="flex flex-col">
+                <Button className="float-right" type="submit">
+                  {loading && (
+                    <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />
+                  )}
+                  Anmelden
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
 }

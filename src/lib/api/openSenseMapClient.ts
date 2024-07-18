@@ -43,19 +43,28 @@ axiosApiInstance.interceptors.response.use(
 
 const refreshAccessToken = async () => {
   const refreshToken = useAuthStore.getState().refreshToken;
-  const response = await axiosApiInstanceWithoutInterceptor.post(
-    "/users/refresh-auth",
-    {
-      token: refreshToken,
+  try {
+    const response = await axiosApiInstanceWithoutInterceptor.post(
+      "/users/refresh-auth",
+      {
+        token: refreshToken,
+      }
+    );
+    if (response.status === 200) {
+      const { token, refreshToken } = response.data;
+      useAuthStore.getState().setToken(token);
+      useAuthStore.getState().setRefreshToken(refreshToken);
+      return token;
+    } else {
+      throw new Error(response.data.message);
     }
-  );
-  if (response.status === 200) {
-    const { token, refreshToken } = response.data;
-    useAuthStore.getState().setToken(token);
-    useAuthStore.getState().setRefreshToken(refreshToken);
-    return token;
-  } else {
-    throw new Error(response.data.message);
+  } catch (error) {
+    // Log out user in case of an error
+    useAuthStore.getState().setToken("");
+    useAuthStore.getState().setRefreshToken("");
+    useAuthStore.getState().setEmail("");
+    useAuthStore.getState().setIsLoggedIn(false);
+    throw error;
   }
 };
 
@@ -258,9 +267,7 @@ export async function getSensorDataByBoxId(boxId: string) {
     console.error("Error fetching sensor data by box id", error);
     throw error;
   }
-
 }
-
 
 export async function verifyToken(token: string) {
   try {

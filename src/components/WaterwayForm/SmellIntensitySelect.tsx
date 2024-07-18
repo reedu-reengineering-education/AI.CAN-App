@@ -31,7 +31,12 @@ const SmellIntensitySlider = ({
   };
 
   return (
-    <div className="flex flex-col items-center p-4 ">
+    <div className="flex flex-col  p-4 ">
+      {disabled ? (
+        <></>
+      ) : (
+        <h2 className="text-xl font-semibold mb-4"> Geruch</h2>
+      )}
       <Slider
         min={1}
         max={5}

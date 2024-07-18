@@ -1,52 +1,64 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import Welcome from "./Welcome";
 import { Navigation, Pagination } from "swiper/modules";
-import WizardSlide from "./WizardSlide";
-import { useAuthStore } from "@/lib/store/useAuthStore";
-import LoginOrRegister from "../openSenseMap/LoginOrRegister";
-import BluetoothSlide from "./BluetoothSlide";
-import useSenseBox from "@/lib/useSenseBox";
-import MeasurementSlide from "./MeasurementSlide";
 import WaterWayFormSlide from "./WaterwayFormSlide";
 import OverviewSlide from "./OverviewSlide";
-import PositionSelect from "./PositionSelect";
-import BoxSelectSlide from "./BoxSelectSlide";
+import RecordMeasurement from "./RecordMeasurement";
+import { useRouter } from "next/navigation";
+
+interface FormData {
+  box: any;
+  sensors: Record<string, any>;
+  position: any;
+  ph: number;
+  temperature: number;
+  conductivity: number;
+  development: any;
+  weather: any;
+  smell: any;
+  color: any;
+  wind: any;
+  time: string;
+}
 
 export default function Wizard() {
-  const isLoggedIn = useAuthStore((state) => state.isLoggedIn);
-  const { connect, isConnected, disconnect } = useSenseBox();
+  const router = useRouter();
 
   // State to hold all the data collected from the slides
-  const [formData, setFormData] = useState({
+  const defaultFormData: FormData = {
     box: null,
     sensors: {},
-    position: null,
+    position: { latitude: 53.041959805718506, longitude: 14.326863173855571 },
     ph: 0,
     temperature: 0,
     conductivity: 0,
-    development: null,
-    weather: null,
-    smell: null,
-    color: null,
-    wind: null,
-  });
+    development: 0,
+    weather: 0,
+    smell: 0,
+    color: 0,
+    wind: 0,
+    time: new Date().toISOString(),
+  };
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
+  const [formData, setFormData] = useState<FormData>(defaultFormData);
+  // State to hold all the data collected from the slides
 
   // Function to update formData
-  const updateFormData = (field: any, value: any) => {
+  const updateFormData = (field: keyof FormData, value: any) => {
     setFormData((prevData) => ({
       ...prevData,
       [field]: value,
     }));
-    console.log(formData);
+  };
+
+  const handleCancel = () => {
+    // Handle the cancel action here
+    setFormData(defaultFormData);
+    router.push("/map");
   };
 
   return (
@@ -57,49 +69,17 @@ export default function Wizard() {
       threshold={20}
       allowTouchMove={false}
     >
-      <SwiperSlide>
-        <WizardSlide>
-          <Welcome />
-        </WizardSlide>
+      <SwiperSlide className="p-4">
+        <RecordMeasurement
+          updateFormData={updateFormData}
+          formData={formData}
+        />
       </SwiperSlide>
-      <SwiperSlide>
-        <WizardSlide>
-          <PositionSelect updateFormData={updateFormData} />
-        </WizardSlide>
+      <SwiperSlide className="p-4">
+        <WaterWayFormSlide updateFormData={updateFormData} />
       </SwiperSlide>
-      <SwiperSlide>
-        <WizardSlide>
-          <BoxSelectSlide
-            position={formData.position}
-            updateFormData={updateFormData}
-          />
-        </WizardSlide>
-      </SwiperSlide>
-      {!isConnected ? (
-        <SwiperSlide>
-          <WizardSlide>
-            <BluetoothSlide updateFormData={updateFormData} />
-          </WizardSlide>
-        </SwiperSlide>
-      ) : null}
-
-      <SwiperSlide>
-        <WizardSlide>
-          <MeasurementSlide
-            formData={formData}
-            updateFormData={updateFormData}
-          />
-        </WizardSlide>
-      </SwiperSlide>
-      <SwiperSlide>
-        <WizardSlide>
-          <WaterWayFormSlide updateFormData={updateFormData} />
-        </WizardSlide>
-      </SwiperSlide>
-      <SwiperSlide>
-        <WizardSlide>
-          <OverviewSlide formData={formData} />
-        </WizardSlide>
+      <SwiperSlide className="p-4">
+        <OverviewSlide formData={formData} />
       </SwiperSlide>
     </Swiper>
   );

@@ -1,13 +1,6 @@
 import { useSwiper } from "swiper/react";
 import { Button } from "../ui/button";
-import Image from "next/image";
-import WizardSlide from "./WizardSlide";
-import waterDrop from "../../../public/waterDrop.png";
-import {
-  BluetoothIcon,
-  MousePointerClickIcon,
-  PointerIcon,
-} from "lucide-react";
+import { PointerIcon } from "lucide-react";
 import useSenseBox from "@/lib/useSenseBox";
 import AnimatedNumber from "@/components/ui/animated-number";
 import { useEffect, useState } from "react";

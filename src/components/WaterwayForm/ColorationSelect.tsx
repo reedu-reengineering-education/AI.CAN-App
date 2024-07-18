@@ -34,9 +34,9 @@ const ColorationSlider = ({
   );
 
   return (
-    <div className="flex flex-col items-center p-4">
+    <div className="flex flex-col p-4 gap-4">
+      <h2 className="text-xl font-semibold mr-4"> Färbung </h2>
       <div className="flex items-center w-full mb-4 gap-4">
-        <h2 className="text-xl font-semibold mr-4"> Färbung </h2>
         <Slider
           min={1}
           max={4}

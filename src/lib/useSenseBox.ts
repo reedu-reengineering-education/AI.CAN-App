@@ -104,8 +104,10 @@ export default function useSenseBox(timestampInterval: number = 500) {
     });
     listen(BLE_SENSEBOX_SERVICE, BLE_EC_CHARACTERISTIC, (data) => {
       const [ec] = parsePackages(data);
-      setEc(ec);
-      pushDataToProcess({ ec });
+      // CONVERSION TO µS/cm
+      const ecMikroS: number = Math.floor(ec * 1000);
+      setEc(ecMikroS);
+      pushDataToProcess({ ec: ecMikroS });
     });
     listen(BLE_SENSEBOX_SERVICE, BLE_TURBIDITY_CHARACTERISTIC, (data) => {
       const [turbidity] = parsePackages(data);

@@ -10,14 +10,11 @@ export default function WaterWayFormSlide({
   const swiper = useSwiper();
 
   return (
-    <div className="flex flex-col h-screen w- justify-center">
+    <div className="flex flex-col h-screen w- justify-center mt-5">
       <div className="space-y-4">
         <h1 className="text-2xl font-bold text-center">
           Gewässergütekartierung
         </h1>
-        <p className="text-gray-600 text-center">
-          Gebe jetzt ein paar Informationen zu dem Gewässer an.
-        </p>
       </div>
       <WaterwayForm updateFormData={updateFormData} />
       <div className="flex justify-between mt-6">

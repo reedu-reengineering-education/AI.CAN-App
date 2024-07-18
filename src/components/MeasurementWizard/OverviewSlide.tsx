@@ -1,6 +1,5 @@
 import Link from "next/link";
 import OverviewWaterwayForm from "../OverviewWaterwayForm/OverviewWaterwayForm";
-import MeasurementsGrid from "../ui/MeasurementsGrid";
 import { Button } from "../ui/button";
 import { useSwiper } from "swiper/react";
 import { uploadData } from "@/lib/api/openSenseMapClient";
@@ -11,13 +10,18 @@ import { useRouter } from "next/navigation";
 import { useMeasurementStore } from "@/lib/store/useMeasurementStore";
 import AnimatedNumber from "../ui/animated-number";
 import { cn } from "@/lib/utils";
+import usePreferences from "@/lib/store/usePreferences";
+import { useStateStore } from "@/lib/store/useStateStore";
+import { Toggle } from "../ui/toggle";
+import { Checkbox } from "../ui/checkbox";
 
 export default function OverviewSlide({ formData }: { formData: any }) {
   const swiper = useSwiper();
   const { toast } = useToast();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-
+  const { value, saveValue, getValue } = usePreferences(formData.time);
+  const { offline, setOffline } = useStateStore();
   const {
     setTemperature,
     setPh,
@@ -47,9 +51,28 @@ export default function OverviewSlide({ formData }: { formData: any }) {
     }
   };
 
+  const saveMeasurementLocally = async () => {
+    saveValue(formData);
+    const result = await getValue();
+  };
+
+  const handleSubmit = async () => {
+    try {
+      saveMeasurementLocally();
+      if (offline) {
+        handleUploadmeasurement();
+        toast({ title: "Messung erfolgreich hochgeladen und gespeichter!" });
+      } else {
+        toast({ title: "Messung erfolgreich lokal gespeichert!" });
+      }
+      router.push("/map"); // Nach erfolgreichem Upload zur Startseite weiterleiten
+    } catch (error) {
+      toast({ title: `Fehler beim speichern: ${error}` });
+    }
+  };
+
   const handleUploadmeasurement = async () => {
     setLoading(true);
-    console.log(formData);
     // Implement the upload functionality here
     const sensors = formData.sensors;
     const data = [
@@ -110,7 +133,6 @@ export default function OverviewSlide({ formData }: { formData: any }) {
       setDevelopment(formData.development);
 
       toast({ title: "Messung erfolgreich hochgeladen" });
-      router.push("/"); // Nach erfolgreichem Upload zur Startseite weiterleiten
     } catch (error) {
       toast({ title: `Fehler beim hochladen: ${error}` });
 
@@ -119,9 +141,13 @@ export default function OverviewSlide({ formData }: { formData: any }) {
     setLoading(false);
   };
 
+  const handleOfflineMode = (event: any) => {
+    setOffline(!event);
+  };
+
   return (
     <div className="flex flex-col h-screen justify-center">
-      <div className="space-y-4">
+      <div className="space-y-4 flex tiems-center flex-col">
         <h1 className="text-3xl font-bold text-center">Zusammenfassung</h1>
         <p className="text-gray-600 text-center">
           Du kannst die Messung nochmal überprüfen und mit einem Klick auf den
@@ -156,13 +182,10 @@ export default function OverviewSlide({ formData }: { formData: any }) {
       />
       <div className="flex justify-between mt-6">
         <Button onClick={() => swiper.slidePrev()}>Zurück</Button>
-        <Button
-          onClick={() => handleUploadmeasurement()}
-          disabled={loading}
-          type="submit"
-        >
+
+        <Button onClick={() => handleSubmit()} disabled={loading} type="submit">
           {loading && <Loader2Icon className="mr-2 h-4 w-4 animate-spin" />}
-          Messung speicher
+          Messung speichern
         </Button>
       </div>
     </div>

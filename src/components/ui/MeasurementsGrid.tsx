@@ -1,46 +1,32 @@
 import { useAuthStore } from "@/lib/store/useAuthStore";
-import { useMeasurementStore } from "@/lib/store/useMeasurementStore";
-import { useSenseBoxValuesStore } from "@/lib/store/useSenseBoxValuesStore";
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
+import colors from "tailwindcss/colors";
 import AnimatedNumber from "./animated-number";
+import { useSenseBoxValuesStore } from "@/lib/store/useSenseBoxValuesStore";
+import { useMeasurementStore } from "@/lib/store/useMeasurementStore";
+import { motion } from "framer-motion";
 
-const MeasurementsGrid = ({ useHistoric }: { useHistoric: boolean }) => {
-  const { temperature, ph, ec, turbidity } = useSenseBoxValuesStore();
-  const { temperatureHistoric, phHistoric, ecHistoric, turbidityHistoric } =
-    useMeasurementStore();
+interface MeasurementsGridProps {
+  values: {
+    temperature: number | null;
+    ph: number | null;
+    ec: number | null;
+  };
+}
+
+const MeasurementsGrid: React.FC<MeasurementsGridProps> = ({ values }) => {
+  const { temperature, ph, ec } = values;
+
   const selectedBox = useAuthStore((state) => state.selectedBox);
 
   return (
-    <div className="flex w-full flex-col justify-around p-1">
+    <div className="flex w-full flex-col justify-around p-1 pb-safe-offset-8">
       <div className={cn("relative flex w-full flex-col divide-y")}>
         <div className={cn("grid w-full grid-cols-2 gap-1")}>
-          {useHistoric ? (
-            <>
-              <GridItem
-                name="Wassertemperatur"
-                value={temperatureHistoric}
-                unit="°C"
-              />
-              <GridItem name="pH-Wert" value={phHistoric} unit="" />
-              <GridItem
-                name="Elektrische Leitfähigkeit"
-                value={ecHistoric}
-                unit="μS/cm"
-              />
-            </>
-          ) : (
-            <>
-              <GridItem name="Wassertemperatur" value={temperature} unit="°C" />
-              <GridItem name="pH-Wert" value={ph} unit="" />
-              <GridItem
-                name="Elektrische Leitfähigkeit"
-                value={ec}
-                unit="μS/cm"
-              />
-            </>
-          )}
+          <GridItem name="Wassertemperatur" value={temperature} unit="°C" />
+          <GridItem name="pH-Wert" value={ph} unit="" />
+          <GridItem name="Elektrische Leitfähigkeit" value={ec} unit="μS/cm" />
         </div>
       </div>
     </div>
@@ -59,7 +45,7 @@ function GridItem({
   decimals = 2,
 }: {
   name: string;
-  value: number | (number | undefined)[] | undefined;
+  value: number | (number | undefined)[] | null | undefined;
   labels?: string[];
   unit: string;
   decimals?: number;
@@ -70,6 +56,7 @@ function GridItem({
 
   useEffect(() => {
     if (value !== undefined && !Array.isArray(value)) {
+      // @ts-ignore
       setSelectedValue(value);
     }
   }, [value]);

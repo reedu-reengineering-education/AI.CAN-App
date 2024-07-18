@@ -71,8 +71,8 @@ export default function MeasurementDialog({
           setValue(ph);
           break;
         case "Elektrische Leitfähigkeit":
-          updateFormData("conductivity", ec);
-          setValue(ec);
+          updateFormData("conductivity", 1728);
+          setValue(1728);
           break;
       }
 

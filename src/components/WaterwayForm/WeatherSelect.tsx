@@ -31,7 +31,7 @@ const WeatherSelector = ({
   };
 
   return (
-    <div className="flex flex-col  p-4">
+    <div className="flex flex-col p-4">
       {disabled ? (
         <></>
       ) : (
