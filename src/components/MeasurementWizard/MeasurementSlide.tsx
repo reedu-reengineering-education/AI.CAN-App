@@ -37,7 +37,7 @@ export default function MeasurementSlide({
       </div>
       <div className="flex flex-col gap-4">
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger disabled={!isConnected}>
             <GridItem
               name="Wassertemperatur"
               value={formData.temperature}
@@ -47,7 +47,9 @@ export default function MeasurementSlide({
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
               name="Wassertemperatur"
+              formName="temperature"
               unit="°C"
             />
             <DialogFooter className="flex justify-end p-5">
@@ -58,13 +60,15 @@ export default function MeasurementSlide({
           </DialogContent>
         </Dialog>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger disabled={!isConnected}>
             <GridItem name="ph-Wert" value={formData.ph} unit="" />
           </DialogTrigger>
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
               name="ph-Wert"
+              formName="ph"
               unit=""
             />
             <DialogFooter className="flex justify-end p-5">
@@ -75,7 +79,7 @@ export default function MeasurementSlide({
           </DialogContent>
         </Dialog>
         <Dialog>
-          <DialogTrigger>
+          <DialogTrigger disabled={!isConnected}>
             <GridItem
               name="Elektrische Leitfähigkeit"
               value={formData.conductivity}
@@ -85,7 +89,9 @@ export default function MeasurementSlide({
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
               name="Elektrische Leitfähigkeit"
+              formName="conductivity"
               unit="µS/cm"
             />
             <DialogFooter className="flex justify-end p-5">

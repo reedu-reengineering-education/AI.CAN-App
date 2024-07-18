@@ -19,10 +19,14 @@ export default function MeasurementDialog({
   name,
   unit,
   updateFormData,
+  formData,
+  formName
 }: {
   name: string;
   unit: string;
   updateFormData: any;
+  formData: any;
+  formName: string;
 }) {
   const [open, setOpen] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -30,63 +34,85 @@ export default function MeasurementDialog({
   const [isRecording, setIsRecording] = useState(false);
   const [measurementDone, setMeasurementDone] = useState(false);
   const { temperature, ph, ec, turbidity } = useSenseBoxValuesStore();
-  const [value, setValue] = useState<number | undefined>();
+  const [value, setValue] = useState<number | undefined>(undefined);
+  const [counter, setCounter] = useState(0);
 
   useEffect(() => {
     let timer: any;
-    let temperatureSum: any = 0;
-    let phSum: any = 0;
-    let ecSum: any = 0;
-    let counter = 0;
     if (isRecording && timeRemaining > 0) {
       timer = setInterval(() => {
         setTimeRemaining((prev) => prev - 1);
         setProgress((prev) => prev + 1);
+
+        // Werte aufsummieren
         switch (name) {
           case "Wassertemperatur":
-            temperatureSum += temperature;
+            if (value === undefined) {
+              setValue(temperature);
+            } else {
+              setValue(value + temperature);
+            }
             break;
           case "ph-Wert":
-            phSum += ph;
+            if (value === undefined) {
+              setValue(ph);
+            } else {
+              setValue(value + ph);
+            }
             break;
           case "Elektrische Leitfähigkeit":
-            ecSum += ec;
+            if (value === undefined) {
+              setValue(ec);
+            } else {
+              setValue(value + ec);
+            }
             break;
           case "Trübung":
             break;
         }
-        counter++;
+        setCounter(counter + 1);
       }, 1000);
     } else if (isRecording && timeRemaining === 0) {
       setIsRecording(false);
     }
+
     if (isRecording && progress >= 5) {
       setIsRecording(false);
+      if (value === undefined) {
+        return;
+      }
+      // Mittelwerte berechnen
       switch (name) {
         case "Wassertemperatur":
-          updateFormData("temperature", temperature);
-          setValue(temperature);
+          const averageTemperature = value / counter;
+          updateFormData("temperature", averageTemperature);
+          setValue(averageTemperature);
           break;
         case "ph-Wert":
-          updateFormData("ph", ph);
-          setValue(ph);
+          const averagePh = value / counter;
+          updateFormData("ph", averagePh);
+          setValue(averagePh);
           break;
         case "Elektrische Leitfähigkeit":
-          updateFormData("conductivity", ec);
-          setValue(ec);
+          const averageEc = value / counter;
+          updateFormData("conductivity", averageEc);
+          setValue(averageEc);
           break;
       }
 
+      setValue(undefined);
+      setCounter(0);
       setProgress(0);
       setTimeRemaining(5);
 
       setMeasurementDone(true);
     }
+
     return () => clearInterval(timer);
   }, [isRecording, timeRemaining]);
 
   const handleRecord = () => {
-    setValue(0);
+    console.log(formData[name]);
     setIsRecording(true);
     setProgress(0);
     setTimeRemaining(5);
@@ -118,7 +144,7 @@ export default function MeasurementDialog({
         ) : null}
         {measurementDone ? (
           <div>
-            <GridItem name={name} value={value} unit={unit} />
+            <GridItem name={name} value={formData[formName]} unit={unit} />
           </div>
         ) : null}
       </div>

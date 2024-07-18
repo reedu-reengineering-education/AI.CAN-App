@@ -148,7 +148,9 @@ export default function RecordMeasurement({
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
               name="Wassertemperatur"
+              formName="temperature"
               unit="°C"
             />
             <DialogFooter className="flex justify-end p-5">
@@ -170,7 +172,9 @@ export default function RecordMeasurement({
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
               name="ph-Wert"
+              formName="ph"
               unit=""
             />
             <DialogFooter className="flex justify-end p-5">
@@ -192,6 +196,8 @@ export default function RecordMeasurement({
           <DialogContent>
             <MeasurementDialog
               updateFormData={updateFormData}
+              formData={formData}
+              formName="conductivity"
               name="Elektrische Leitfähigkeit"
               unit="µS/cm"
             />
