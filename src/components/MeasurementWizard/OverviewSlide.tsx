@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import usePreferences from "@/lib/store/usePreferences";
 import { useStateStore } from "@/lib/store/useStateStore";
 import { Toggle } from "../ui/toggle";
-import { Checkbox } from "../ui/checkbox";
 
 export default function OverviewSlide({ formData }: { formData: any }) {
   const swiper = useSwiper();
