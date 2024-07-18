@@ -31,6 +31,7 @@ export default function MeasurementDialog({
   const [measurementDone, setMeasurementDone] = useState(false);
   const { temperature, ph, ec, turbidity } = useSenseBoxValuesStore();
   const [value, setValue] = useState<number | undefined>();
+
   useEffect(() => {
     let timer: any;
     let temperatureSum: any = 0;
@@ -71,19 +72,21 @@ export default function MeasurementDialog({
           setValue(ph);
           break;
         case "Elektrische Leitfähigkeit":
-          updateFormData("conductivity", 1728);
-          setValue(1728);
+          updateFormData("conductivity", ec);
+          setValue(ec);
           break;
       }
 
       setProgress(0);
       setTimeRemaining(5);
+
       setMeasurementDone(true);
     }
     return () => clearInterval(timer);
   }, [isRecording, timeRemaining]);
 
   const handleRecord = () => {
+    setValue(0);
     setIsRecording(true);
     setProgress(0);
     setTimeRemaining(5);

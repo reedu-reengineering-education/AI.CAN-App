@@ -137,7 +137,7 @@ export default function RecordMeasurement({
       </div>
       <div className="flex flex-col gap-4">
         <Dialog>
-          <DialogTrigger disabled={isConnected}>
+          <DialogTrigger>
             <GridItem
               name="Wassertemperatur"
               value={formData.temperature}
